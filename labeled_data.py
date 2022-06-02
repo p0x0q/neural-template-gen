@@ -84,7 +84,8 @@ class SentenceCorpus(object):
     def get_vocabs(self, path, src_path, thresh=2):
         """unks words occurring <= thresh times"""
         tgt_voc = Counter()
-        assert os.path.exists(path)
+        # print("path", path)
+        # assert os.path.exists(path)
 
         linewords = []
         with open(src_path, 'r') as f:

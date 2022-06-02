@@ -1160,14 +1160,30 @@ if __name__ == "__main__":
             src_b = src_b.cuda()
             uniq_b = uniq_b.cuda()
 
-        srcenc, srcfieldenc, uniqenc = net.encode(Variable(src_b, volatile=True), None,
-                                                  Variable(uniq_b, volatile=True))
+        # srcenc, srcfieldenc, uniqenc = net.encode(Variable(src_b, volatile=True), None,
+        #                                           Variable(uniq_b, volatile=True))
+        # about: https://blog.csdn.net/qq_36786467/article/details/108240969
+        
+        a = None
+        b = None
+        with torch.no_grad():
+            a = Variable(src_b)
+        with torch.no_grad():
+            b = Variable(uniq_b)
+            
+        # print("-" * 20)
+        
+        srcenc, srcfieldenc, uniqenc = net.encode(a, None, b)
+        
         init_logps, trans_logps = net.trans_logprobs(uniqenc, 2)
         _, len_scores = net.len_logprobs()
         len_lps = net.lsm(len_scores).data
         init_logps, trans_logps = init_logps.data.cpu(), trans_logps.data[0].cpu()
         inits = net.h0_lin(srcenc)
-        h0, c0 = F.tanh(inits[:, :inits.size(1)/2]), inits[:, inits.size(1)/2:]
+
+        # print("inits", inits[:, inits.size(1)//2:])
+        h0, c0 = F.tanh(inits[:, :inits.size(1)//2]), inits[:, inits.size(1)//2:]
+        # fix but error: https://qiita.com/shizen-shin/items/2bf7bd9f0f5f83c0a93e
 
         nfields = src_b.size(1)
         row2tblent = {}
