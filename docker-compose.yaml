@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: make train
+    # ports:
+    #   - 0.0.0.0:2083:8080
+    volumes:
+      - './:/usr/src/app'
+    tty: true
+    stdin_open: true
+    environment:
+      TZ: Asia/Tokyo
+      # PORT: 8080
