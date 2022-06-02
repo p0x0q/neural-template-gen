@@ -22,6 +22,7 @@ class HSMM(nn.Module):
     standard hsmm
     """
     def __init__(self, wordtypes, gentypes, opt):
+        opt.cuda = False #disable cuda
         super(HSMM, self).__init__()
         self.K = opt.K
         self.Kmul = opt.Kmul
