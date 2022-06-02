@@ -23,6 +23,7 @@ class HSMM(nn.Module):
     """
     def __init__(self, wordtypes, gentypes, opt):
         super(HSMM, self).__init__()
+        opt.cuda = False #disable cuda
         self.K = opt.K
         self.Kmul = opt.Kmul
         self.L = opt.L
@@ -955,7 +956,8 @@ if __name__ == "__main__":
 
     saved_args, saved_state = None, None
     if len(args.load) > 0:
-        saved_stuff = torch.load(args.load)
+        # saved_stuff = torch.load(args.load)
+        saved_stuff = torch.load(args.load,map_location=torch.device('cpu')) 
         saved_args, saved_state = saved_stuff["opt"], saved_stuff["state_dict"]
         for k, v in args.__dict__.iteritems():
             if k not in saved_args.__dict__:

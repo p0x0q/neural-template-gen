@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: make train
+    command: make generate
     # ports:
     #   - 0.0.0.0:2083:8080
     volumes:

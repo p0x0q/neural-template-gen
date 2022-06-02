@@ -37,6 +37,7 @@ RUN apt-get -y install tesseract-ocr tesseract-ocr-jpn libtesseract-dev liblepto
 # RUN pip install -r requirements.txt
 RUN pip install setuptools_scm
 RUN pip install psutil
-RUN pip install torch>=0.3
+RUN pip install https://download.pytorch.org/whl/cpu/torch-0.3.1-cp27-cp27mu-linux_x86_64.whl
 RUN pip install future
 RUN pip install numpy --upgrade
+RUN pip install torchvision torchaudio
