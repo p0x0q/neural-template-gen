@@ -17,7 +17,7 @@ def recover_bps(delt, bps, bps_star):
     seqlenp1, bsz, K = delt.size()
     seqlen = seqlenp1 - 1
     seqs = []
-    for b in range(bsz):
+    for b in xrange(bsz):
         seq = []
         _, last_lab = delt[seqlen][b].max(0)
         last_lab = last_lab[0]
@@ -49,9 +49,9 @@ def viterbi(pi, trans_logprobs, bwd_obs_logprobs, len_logprobs, constraints=None
     # currently len_logprobs contains tensors that are [1 step back; 2 steps back; ... L steps_back]
     # but we need to flip on the 0'th axis
     flipped_len_logprobs = []
-    for l in range(len(len_logprobs)):
+    for l in xrange(len(len_logprobs)):
         llps = len_logprobs[l]
-        flipped_len_logprobs.append(torch.stack([llps[-i-1] for i in range(llps.size(0))]))
+        flipped_len_logprobs.append(torch.stack([llps[-i-1] for i in xrange(llps.size(0))]))
 
     bps = delt.long().fill_(L)
     bps_star = delt_star.long()
@@ -59,7 +59,7 @@ def viterbi(pi, trans_logprobs, bwd_obs_logprobs, len_logprobs, constraints=None
 
     mask = trans_logprobs.new(L, bsz, K)
 
-    for t in range(1, seqlen+1):
+    for t in xrange(1, seqlen+1):
         steps_back = min(L, t)
         steps_fwd = min(L, seqlen-t+1)
 
@@ -68,7 +68,7 @@ def viterbi(pi, trans_logprobs, bwd_obs_logprobs, len_logprobs, constraints=None
             len_terms = flipped_len_logprobs[min(L-1, steps_fwd-1)][-steps_back:]
         else: # we need to pick probs from different distributions...
             len_terms = torch.stack([len_logprobs[min(L, seqlen+1-t+jj)-1][jj]
-                                     for jj in range(L-1, -1, -1)])
+                                     for jj in xrange(L-1, -1, -1)])
 
         if constraints is not None and constraints[t] is not None:
             tmask = mask.narrow(0, 0, steps_back).zero_()
@@ -126,7 +126,7 @@ def just_fwd(pi, trans_logprobs, bwd_obs_logprobs, constraints=None):
     bwd_maxlens[-L:].copy_(torch.arange(L, 0, -1))
     bwd_maxlens = bwd_maxlens.log_().view(seqlen, 1, 1)
 
-    for t in range(1, seqlen+1):
+    for t in xrange(1, seqlen+1):
         steps_back = min(L, t)
 
         if constraints is not None and constraints[t] is not None:
@@ -170,7 +170,7 @@ def just_bwd(trans_logprobs, fwd_obs_logprobs, len_logprobs, constraints=None):
     beta[seqlen] = Variable(trans_logprobs.data.new(bsz, K).zero_())
     mask = trans_logprobs.data.new(L, bsz, K)
 
-    for t in range(1, seqlen+1):
+    for t in xrange(1, seqlen+1):
         steps_fwd = min(L, t)
 
         len_terms = len_logprobs[min(L-1, steps_fwd-1)] # steps_fwd x K
@@ -225,6 +225,6 @@ def bwd_from_fwd_obs_logprobs(fwd_obs_logprobs):
     L = fwd_obs_logprobs.size(0)
     bwd_obs_logprobs = fwd_obs_logprobs.new().resize_as_(fwd_obs_logprobs).fill_(-float("inf"))
     bwd_obs_logprobs[L-1].copy_(fwd_obs_logprobs[0])
-    for l in range(1, L):
+    for l in xrange(1, L):
         bwd_obs_logprobs[L-l-1, l:].copy_(fwd_obs_logprobs[l, :-l])
     return bwd_obs_logprobs
