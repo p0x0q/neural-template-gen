@@ -1,5 +1,7 @@
 FROM ubuntu:20.04
 
+FROM nvidia/cuda:11.2.1-base
+
 # 日本設定
 ENV TZ Asia/Tokyo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -16,7 +18,9 @@ RUN apt update -yqq && \
 
 
 
-FROM python:2.7.18
+FROM python:2.7.16
+
+
 
 WORKDIR /usr/src/app
 
@@ -37,7 +41,9 @@ RUN apt-get -y install tesseract-ocr tesseract-ocr-jpn libtesseract-dev liblepto
 # RUN pip install -r requirements.txt
 RUN pip install setuptools_scm
 RUN pip install psutil
-RUN pip install https://download.pytorch.org/whl/cpu/torch-0.3.1-cp27-cp27mu-linux_x86_64.whl
 RUN pip install future
 RUN pip install numpy --upgrade
-RUN pip install torchvision torchaudio
+# RUN pip install torchvision torchaudio
+RUN pip install https://download.pytorch.org/whl/cpu/torch-0.3.1-cp27-cp27mu-linux_x86_64.whl
+
+

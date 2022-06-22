@@ -1,3 +1,6 @@
+import time
+time.sleep(3000)
+
 import sys
 import os
 import math
@@ -300,7 +303,7 @@ class HSMM(nn.Module):
         # bsz x dim -> bsz x seqlen x dim -> bsz*seqlen x dim -> layers x bsz*seqlen x dim
         inits = self.h0_lin(srcenc) # bsz x 2*dim
         h0, c0 = inits[:, :rnn_size], inits[:, rnn_size:] # (bsz x dim, bsz x dim)
-        h0 = F.tanh(h0).unsqueeze(1).expand(bsz, seqlen, rnn_size).contiguous().view(
+        h0 = torch.tanh(h0).unsqueeze(1).expand(bsz, seqlen, rnn_size).contiguous().view(
             -1, rnn_size).unsqueeze(0).expand(layers, -1, rnn_size).contiguous()
         c0 = c0.unsqueeze(1).expand(bsz, seqlen, rnn_size).contiguous().view(
             -1, rnn_size).unsqueeze(0).expand(layers, -1, rnn_size).contiguous()
@@ -326,7 +329,7 @@ class HSMM(nn.Module):
                            Lp1, bsz, seqlen, -1)
             # L+1 x bsz x seqlen x rnn_size -> bsz x (L+1)seqlen x rnn_size
             attnin1 = attnin1.transpose(0, 1).contiguous().view(bsz, Lp1*seqlen, -1)
-            attnin1 = F.tanh(attnin1)
+            attnin1 = torch.tanh(attnin1)
             ascores = torch.bmm(attnin1, srcfieldenc.transpose(1, 2)) # bsz x (L+1)slen x nfield
             ascores = ascores + fieldmask.unsqueeze(1).expand_as(ascores)
             aprobs = F.softmax(ascores, dim=2)
@@ -338,7 +341,7 @@ class HSMM(nn.Module):
             out_hid_sz = rnn_size + encdim
             cat_ctx = cat_ctx.view(Lp1, -1, out_hid_sz)
             # now linear to get L+1 x bsz*seqlen x rnn_size
-            states_k = F.tanh(cat_ctx * self.state_out_gates[k].expand_as(cat_ctx)
+            states_k = torch.tanh(cat_ctx * self.state_out_gates[k].expand_as(cat_ctx)
                               + self.state_out_biases[k].expand_as(cat_ctx)).view(
                                   Lp1, -1, out_hid_sz)
 
@@ -348,7 +351,7 @@ class HSMM(nn.Module):
                                Lp1, bsz, seqlen, -1)
                 # L+1 x bsz x seqlen x rnn_size -> bsz x (L+1)seqlen x emb_size
                 attnin2 = attnin2.transpose(0, 1).contiguous().view(bsz, Lp1*seqlen, -1)
-                attnin2 = F.tanh(attnin2)
+                attnin2 = torch.tanh(attnin2)
                 ascores = torch.bmm(attnin2, srcfieldenc.transpose(1, 2)) # bsz x (L+1)slen x nfield
                 ascores = ascores + fieldmask.unsqueeze(1).expand_as(ascores)
 
@@ -404,7 +407,7 @@ class HSMM(nn.Module):
                 masked = embs.view(bsz, nfields, emb_size)
             srcenc = F.max_pool1d(masked.transpose(1, 2), nfields).squeeze(2)  # bsz x emb_size
         else:
-            embs = F.tanh(embs.sum(1) + self.src_bias.expand(bsz*nfields, emb_size))
+            embs = torch.tanh(embs.sum(1) + self.src_bias.expand(bsz*nfields, emb_size))
             # average it manually, bleh
             if avgmask is not None:
                 srcenc = (embs.view(bsz, nfields, emb_size)
@@ -434,18 +437,18 @@ class HSMM(nn.Module):
         srcfldenc = srcfieldenc.expand(bsz, nfields, rnn_size)
         attnin1 = (hid * self.state_att_gates[k].expand_as(hid)
                    + self.state_att_biases[k].expand_as(hid)) # 1 x bsz x rnn_size
-        attnin1 = F.tanh(attnin1)
+        attnin1 = torch.tanh(attnin1)
         ascores = torch.bmm(attnin1.transpose(0, 1), srcfldenc.transpose(1, 2)) # bsz x 1 x nfields
         aprobs = F.softmax(ascores, dim=2)
         ctx = torch.bmm(aprobs, srcfldenc) # bsz x 1 x rnn_size
         cat_ctx = torch.cat([hid, ctx.transpose(0, 1)], 2) # 1 x bsz x rnn_size
-        state_k = F.tanh(cat_ctx * self.state_out_gates[k].expand_as(cat_ctx)
+        state_k = torch.tanh(cat_ctx * self.state_out_gates[k].expand_as(cat_ctx)
                          + self.state_out_biases[k].expand_as(cat_ctx)) # 1 x bsz x rnn_size
 
         if self.sep_attn:
             attnin2 = (hid * self.state_att2_gates[k].expand_as(hid)
                        + self.state_att2_biases[k].expand_as(hid))
-            attnin2 = F.tanh(attnin2)
+            attnin2 = torch.tanh(attnin2)
             ascores = torch.bmm(attnin2.transpose(0, 1), srcfldenc.transpose(1, 2)) # bsz x 1 x nfld
 
         wlps_k = F.softmax(torch.cat([self.decoder(state_k.squeeze(0)),
@@ -1167,7 +1170,7 @@ if __name__ == "__main__":
         len_lps = net.lsm(len_scores).data
         init_logps, trans_logps = init_logps.data.cpu(), trans_logps.data[0].cpu()
         inits = net.h0_lin(srcenc)
-        h0, c0 = F.tanh(inits[:, :inits.size(1)/2]), inits[:, inits.size(1)/2:]
+        h0, c0 = torch.tanh(inits[:, :inits.size(1)/2]), inits[:, inits.size(1)/2:]
 
         nfields = src_b.size(1)
         row2tblent = {}
