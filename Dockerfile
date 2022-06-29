@@ -1,7 +1,7 @@
-FROM ubuntu:20.04
-
 FROM nvidia/cuda:11.2.1-base
+RUN nvidia-smi
 
+FROM python:2.7.16
 # 日本設定
 ENV TZ Asia/Tokyo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -15,11 +15,6 @@ RUN apt update -yqq && \
     locale-gen ja_JP.UTF-8 && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
-
-
-
-FROM python:2.7.16
-
 
 
 WORKDIR /usr/src/app
