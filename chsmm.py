@@ -1,5 +1,5 @@
 import time
-time.sleep(3000)
+# time.sleep(3000)
 
 import sys
 import os
@@ -960,7 +960,7 @@ if __name__ == "__main__":
     saved_args, saved_state = None, None
     if len(args.load) > 0:
         # saved_stuff = torch.load(args.load)
-        saved_stuff = torch.load(args.load,map_location=torch.device('cpu')) 
+        saved_stuff = torch.load(args.load) 
         saved_args, saved_state = saved_stuff["opt"], saved_stuff["state_dict"]
         for k, v in args.__dict__.iteritems():
             if k not in saved_args.__dict__:
