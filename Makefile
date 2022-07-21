@@ -11,6 +11,8 @@ command:
 	docker-compose exec server bash
 
 train:
+	python chsmm.py -data data/labee2e/ -emb_size 300 -hid_size 300 -layers 1 -K 55 -L 4 -log_interval 200 -thresh 9 -emb_drop -bsz 15 -max_seqlen 55 -lr 0.5 -sep_attn -max_pool -unif_lenps -one_rnn -Kmul 5 -mlpinp -onmt_decay -cuda -seed 1818 -save models/chsmm-e2e-300-55-5-0shot.pt
+pre-train:
 	python chsmm.py -data data/labee2e/ -emb_size 300 -hid_size 300 -layers 1 -K 55 -L 4 -log_interval 200 -thresh 9 -emb_drop -bsz 16 -max_seqlen 55 -lr 0.5  -sep_attn -max_pool -unif_lenps -one_rnn -Kmul 5 -mlpinp -onmt_decay -load models/e2e-55-5.pt -label_train | tee segs/seg-e2e-300-55-5.txt
 # generate:
 # 	python chsmm.py -data data/labewiki/ -emb_size 300 -hid_size 300 -layers 1 -K 45 -L 4 -log_interval 1000 -thresh 29 -emb_drop -bsz 5 -max_seqlen 55 -lr 0.5 -sep_attn -max_pool -unif_lenps -one_rnn -Kmul 3 -mlpinp -onmt_decay -gen_from_fi wikipedia-biography-dataset/test/test.box -load models/wb-45-3-war.pt -tagged_fi segs/seg-wb-300-45-3-war.txt -beamsz 5 -ntemplates 100 -gen_wts '1,1' -min_gen_tokes 20 > gens/gen-wb-45-3-war.txt
@@ -46,3 +48,6 @@ logs:
 
 submodule:
 	git submodule add https://github.com/p0x0q-dev/python-secure.git python-secure
+
+generate-label:
+	cd data && python make_e2e_labedata.py "train"
