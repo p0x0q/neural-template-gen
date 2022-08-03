@@ -206,6 +206,7 @@ class SentenceCorpus(object):
                 copylocs.append(copied)
                 inps.append(insent)
                 tgtline += 1
+        print(len(src_feats),len(sents))
         assert len(sents) == len(labels)
         assert len(src_feats) == len(sents)
         assert len(copylocs) == len(sents)

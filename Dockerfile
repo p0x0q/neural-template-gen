@@ -57,7 +57,8 @@ RUN apt-get update && apt-get upgrade -y \
 
 WORKDIR /usr/src/app
 
-COPY . .
+# 重いので消しておく
+# COPY . .
 
 
 RUN apt-get -q -y install git curl
