@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: sleep 3600
+    command: sleep 86400
     # ports:
     #   - 0.0.0.0:2083:8080
     volumes:
