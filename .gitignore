@@ -1,5 +1,6 @@
 segs
-data
+data/labee2e-full
+data/wikipedia-biography-dataset
 .vscode
 *.gz
 models

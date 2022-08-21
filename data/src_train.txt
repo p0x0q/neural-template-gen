@@ -1,0 +1,2 @@
+__start_name__ 一成というお店 __end_name__ __start_eatType__ よく天ぷら __end_eatType__ __start_action__ 食べます ___end_action__
+__start_name__ 一成というお店は __end_name__ __start_cost__ 予算が１５００円 __end_cost__ 
