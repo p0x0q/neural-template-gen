@@ -15,7 +15,7 @@
 #     rm -rf /var/lib/apt/lists/*
 
 
-FROM nvidia/cuda:11.0-devel-ubuntu20.04
+FROM nvidia/cuda:10.2-devel-ubuntu18.04
 
 ENV TZ Asia/Tokyo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
