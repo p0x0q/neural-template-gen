@@ -15,6 +15,8 @@ src_train = []
 tempTexts = ""
 for line in load_csv("2022-09-20.csv"):
     tkey, start_template, text, end_template, rawText = line[0], line[1], line[2], line[3], line[5]
+    if start_template == "start_sentences":
+        continue
     if rawText:
         # print(rawText)
         if tempTexts:
@@ -23,7 +25,7 @@ for line in load_csv("2022-09-20.csv"):
         train_tgt_lines.append(rawText)
     
     if start_template and text and end_template:
-        tempTexts = tempTexts + start_template + " " + text + " " + end_template + " "
+        tempTexts = tempTexts + " " + start_template + " " + text + " " + end_template + " "
     else:
         tempTexts = tempTexts + text
     # __start_name__ 一成というお店 __end_name__ __start_eatType__ よく天ぷら __end_eatType__ __start_action__ 食べます ___end_action__
