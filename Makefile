@@ -50,4 +50,5 @@ submodule:
 	git submodule add https://github.com/p0x0q-dev/python-secure.git python-secure
 
 generate-label:
-	cd data && python make_e2e_labedata.py "train"
+	cd data && python make_e2e_labedata.py "train" > train.txt
+	# cd data && python make_e2e_labedata.py "valid" > valid.txt
