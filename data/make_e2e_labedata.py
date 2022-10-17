@@ -2,7 +2,7 @@ import os
 import sys
 
 from utils import get_e2e_fields, e2e_key2idx
-
+os.chdir("./labee2e")
 e2e_train_src = "src_train.txt"
 e2e_train_tgt = "train_tgt_lines.txt" # gold generations corresponding to src_train.txt
 e2e_val_src = "src_valid.txt"

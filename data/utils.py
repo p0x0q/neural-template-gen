@@ -35,6 +35,8 @@ def get_e2e_poswrds(tokes):
     returns (key, num) -> word
     """
     fields = {}
+    print(tokes)
+    input()
     state, num = None, 1 # 1-idx the numbering
     for toke in tokes:
         if "__start" in toke:
