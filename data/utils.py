@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 # leaves out familyFriendly, which is a binary thing...
-e2e_keys = ["name", "eatType", "food", "priceRange", "customerrating", "area", "near"]
+e2e_keys = ["name", "eatType", "food", "priceRange", "customerrating", "area", "near","template"]
 e2e_key2idx = dict((key, i) for i, key in enumerate(e2e_keys))
 
 def get_e2e_fields(tokes, keys=None):
@@ -35,8 +35,7 @@ def get_e2e_poswrds(tokes):
     returns (key, num) -> word
     """
     fields = {}
-    print(tokes)
-    input()
+    # print(tokes)
     state, num = None, 1 # 1-idx the numbering
     for toke in tokes:
         if "__start" in toke:
