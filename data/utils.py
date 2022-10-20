@@ -13,6 +13,7 @@ def get_e2e_fields(tokes, keys=None):
         keys = e2e_keys
     fields = defaultdict(list)
     state = None
+    # print(tokes)
     for toke in tokes:
         if "__start" in toke:
             for key in keys:
