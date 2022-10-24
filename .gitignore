@@ -5,3 +5,6 @@ data/wikipedia-biography-dataset
 *.gz
 models
 gens
+
+data/labee2e
+data/labee2e-ja
