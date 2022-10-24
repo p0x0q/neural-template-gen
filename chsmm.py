@@ -1035,6 +1035,7 @@ if __name__ == "__main__":
             # get T+1 x bsz x K beta quantities
             beta, beta_star = infc.just_bwd(trans_logps, fwd_obs_logps,
                                             len_logprobs, constraints=cidxs)
+            # print "beta_star: %s, init_logps: %s" % (beta_star[0], init_logps)
             log_marg = logsumexp1(beta_star[0] + init_logps).sum() # bsz x 1 -> 1
             neglogev -= log_marg.data[0]
             lossvar = -log_marg/bsz
@@ -1053,6 +1054,7 @@ if __name__ == "__main__":
                 print "batch %d/%d | train neglogev %g " % (batch_idx+1,
                                                             nmini_batches,
                                                             neglogev/nsents)
+        print "neglogev/nsents : %s/%s" % (neglogev, nsents)
         print "epoch %d | train neglogev %g " % (epoch, neglogev/nsents)
         return neglogev/nsents
 
